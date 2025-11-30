@@ -2,2341 +2,713 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Cook International Casino — iOS App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#07030f" />
+  <title>Cook International Casino — PWA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#020617" />
 
-  <!-- PWA manifest -->
-  <link rel="manifest" href="manifest.webmanifest" />
-
-  <!-- iOS install meta -->
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Cook Intl Casino" />
-
-  <!-- TODO: Replace with real touch icon paths -->
-  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <!-- PWA manifest + icons -->
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/cook-international-casino-icon-192.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="/cook-international-casino-icon-192.png" />
+  <link rel="apple-touch-icon" sizes="512x512" href="/cook-international-casino-icon-512.png" />
 
   <style>
     :root {
-      --cp-bg-top: #372257;
-      --cp-bg-mid: #07030f;
-      --cp-bg-bottom: #020007;
-      --cp-gold: #fbbf24;
-      --cp-gold-soft: rgba(251, 191, 36, 0.85);
-      --cp-deep-navy: #020617;
-      --cp-card: rgba(15, 23, 42, 0.92);
-      --cp-border-subtle: rgba(148, 163, 184, 0.35);
-      --cp-radius-lg: 24px;
+      --bg: #020617;
+      --bg-soft: #0b1020;
+      --accent: #facc15;
+      --accent-soft: #fbbf24;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: rgba(148, 163, 184, 0.5);
+      --danger: #ef4444;
+      --nav-height: 56px;
     }
 
     * {
       box-sizing: border-box;
     }
 
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      height: 100%;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: #f9fafb;
-      background: radial-gradient(circle at top, var(--cp-bg-top) 0, var(--cp-bg-mid) 55%, var(--cp-bg-bottom) 100%);
+      background: radial-gradient(circle at top, #111827, #020617 55%, #020617 100%);
+      color: var(--text);
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      font-family: inherit;
-    }
-
-    .is-hidden {
-      display: none !important;
-    }
-
-    /* Root layout */
-    #cp-ios-app {
+    body {
+      display: flex;
+      flex-direction: column;
       min-height: 100vh;
-      display: flex;
-      align-items: stretch;
-      justify-content: center;
-      background: radial-gradient(circle at top, var(--cp-bg-top) 0, var(--cp-bg-mid) 55%, var(--cp-bg-bottom) 100%);
-      color: #f9fafb;
     }
 
-    .cp-shell {
-      flex: 1;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 10px 12px 16px;
+    .app-shell {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      min-height: 100vh;
     }
 
-    @media (min-width: 768px) {
-      .cp-shell {
-        padding: 16px 20px 20px;
-        gap: 12px;
-      }
-    }
-
-    /* Age gate overlay */
-    .cp-age-gate {
-      position: fixed;
-      inset: 0;
-      z-index: 40;
+    /* Header & nav */
+    .app-header {
+      height: var(--nav-height);
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 24px 16px;
-      background:
-        radial-gradient(circle at top, rgba(55, 34, 87, 0.95) 0, rgba(7, 3, 15, 0.98) 55%, rgba(2, 0, 7, 1) 100%);
-      color: #f9fafb;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.95);
+      background: radial-gradient(circle at top, rgba(8, 47, 73, 0.85), rgba(15, 23, 42, 0.98));
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.8);
     }
 
-    .cp-age-card {
-      width: 100%;
-      max-width: 460px;
-      padding: 24px 20px 18px;
-      border-radius: 28px;
-      background:
-        radial-gradient(circle at top left, rgba(248, 250, 252, 0.08), transparent 55%),
-        radial-gradient(circle at bottom right, rgba(251, 191, 36, 0.22), transparent 60%),
-        rgba(15, 23, 42, 0.95);
-      box-shadow:
-        0 26px 60px rgba(15, 23, 42, 0.95),
-        0 0 0 1px rgba(148, 163, 184, 0.4);
-      border: 1px solid rgba(148, 163, 184, 0.65);
+    .brand {
       display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .cp-age-kicker {
-      font-size: 11px;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: rgba(148, 163, 184, 0.9);
+      color: #fef3c7;
     }
 
-    .cp-age-title {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--cp-gold-soft);
-      text-shadow: 0 0 18px rgba(251, 191, 36, 0.45);
-    }
-
-    .cp-age-body {
-      font-size: 14px;
-      line-height: 1.5;
-      color: rgba(226, 232, 240, 0.96);
-    }
-
-    .cp-age-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 4px;
-    }
-
-    .cp-btn-primary {
+    .brand-logo {
+      width: 26px;
+      height: 26px;
       border-radius: 999px;
-      border: none;
-      padding: 10px 18px;
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
+      overflow: hidden;
+      border: 1px solid rgba(250, 204, 21, 0.6);
+      box-shadow: 0 0 16px rgba(250, 204, 21, 0.8);
+      background: radial-gradient(circle at 30% 20%, #fbbf24, #92400e);
+    }
+
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .app-nav {
+      display: flex;
+      gap: 8px;
+    }
+
+    .app-nav a {
+      position: relative;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      background: linear-gradient(135deg, #f97316, #facc15, #fde68a);
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .app-nav a:hover {
+      border-color: rgba(148, 163, 184, 0.9);
+      background: rgba(15, 23, 42, 0.96);
+    }
+
+    .app-nav a.active {
+      border-color: rgba(250, 204, 21, 0.9);
+      background: radial-gradient(circle at 0% 0%, #facc15, #f97316);
       color: #111827;
-      box-shadow:
-        0 12px 30px rgba(251, 146, 60, 0.55),
-        0 0 0 1px rgba(251, 191, 36, 0.75);
-      cursor: pointer;
     }
 
-    .cp-btn-secondary {
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      padding: 9px 18px;
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.85));
-      color: rgba(148, 163, 184, 0.96);
-      cursor: pointer;
-    }
-
-    .cp-age-footer {
-      margin-top: 4px;
-      padding-top: 8px;
-      border-top: 1px solid rgba(51, 65, 85, 0.8);
-      font-size: 10px;
-      line-height: 1.5;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: rgba(148, 163, 184, 0.9);
-      text-align: center;
-    }
-
-    /* Shell header */
-    .cp-shell-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background:
-        radial-gradient(circle at top left, rgba(248, 250, 252, 0.1), transparent 60%),
-        radial-gradient(circle at bottom right, rgba(30, 64, 175, 0.45), transparent 65%),
-        rgba(15, 23, 42, 0.94);
-      box-shadow:
-        0 18px 40px rgba(15, 23, 42, 0.9),
-        0 0 0 1px rgba(148, 163, 184, 0.5);
-    }
-
-    .cp-shell-brand {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-width: 0;
-    }
-
-    .cp-shell-logo {
-      width: 34px;
-      height: 34px;
-      border-radius: 999px;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 30% 0, rgba(251, 191, 36, 0.95), transparent 60%),
-        radial-gradient(circle at 70% 100%, rgba(30, 64, 175, 0.9), transparent 55%),
-        #020617;
-      box-shadow:
-        0 0 0 2px rgba(248, 250, 252, 0.85),
-        0 0 22px rgba(251, 191, 36, 0.75);
-      flex-shrink: 0;
-      position: relative;
-    }
-
-    .cp-shell-logo::after {
-      content: "CI";
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      font-size: 11px;
-      color: #0f172a;
-      text-shadow: 0 0 12px rgba(251, 191, 36, 0.7);
-    }
-
-    .cp-shell-title-block {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      min-width: 0;
-    }
-
-    .cp-shell-title {
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .cp-shell-subtitle {
-      font-size: 11px;
-      color: rgba(148, 163, 184, 0.98);
-      white-space: nowrap;
-    }
-
-    @media (min-width: 768px) {
-      .cp-shell-title {
-        font-size: 14px;
+    @media (max-width: 720px) {
+      .app-header {
+        flex-wrap: wrap;
+        height: auto;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        gap: 6px;
       }
-      .cp-shell-subtitle {
-        font-size: 11px;
-      }
-    }
 
-    /* Nav dropdown */
-    .cp-nav-dropdown {
-      position: relative;
-      min-width: 0;
-    }
-
-    .cp-nav-toggle {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.9));
-      color: rgba(226, 232, 240, 0.96);
-      font-size: 12px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .cp-nav-label {
-      max-width: 160px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .cp-nav-caret {
-      font-size: 11px;
-      opacity: 0.9;
-    }
-
-    .cp-nav-menu {
-      position: absolute;
-      right: 0;
-      margin-top: 6px;
-      min-width: 220px;
-      border-radius: 18px;
-      padding: 6px;
-      background:
-        radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.96));
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      box-shadow:
-        0 24px 50px rgba(15, 23, 42, 0.96),
-        0 0 0 1px rgba(15, 23, 42, 0.9);
-      z-index: 20;
-      display: none;
-    }
-
-    .cp-nav-menu.is-open {
-      display: block;
-    }
-
-    .cp-nav-item {
-      width: 100%;
-      text-align: left;
-      padding: 8px 10px;
-      border-radius: 12px;
-      border: none;
-      background: transparent;
-      color: rgba(226, 232, 240, 0.98);
-      font-size: 12px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      cursor: pointer;
-    }
-
-    .cp-nav-item-primary {
-      color: var(--cp-gold-soft);
-      font-weight: 600;
-    }
-
-    .cp-nav-item:hover {
-      background: radial-gradient(circle at left, rgba(30, 64, 175, 0.65), rgba(15, 23, 42, 0.9));
-    }
-
-    /* Chips pill */
-    .cp-chips-pill {
-      border-radius: 999px;
-      padding: 8px 14px;
-      border: 1px solid rgba(251, 191, 36, 0.75);
-      background:
-        radial-gradient(circle at top left, rgba(251, 191, 36, 0.22), transparent 55%),
-        radial-gradient(circle at bottom right, rgba(30, 64, 175, 0.8), transparent 65%),
-        rgba(15, 23, 42, 0.98);
-      box-shadow:
-        0 18px 40px rgba(15, 23, 42, 0.9),
-        0 0 0 1px rgba(15, 23, 42, 0.95);
-      color: #fefce8;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .cp-chips-pill span {
-      opacity: 0.92;
-    }
-
-    /* Screens */
-    #cp-main {
-      flex: 1;
-      border-radius: var(--cp-radius-lg);
-      padding: 14px 10px 10px;
-      background:
-        radial-gradient(circle at top left, rgba(248, 250, 252, 0.05), transparent 55%),
-        radial-gradient(circle at top right, rgba(37, 99, 235, 0.4), transparent 60%),
-        linear-gradient(135deg, rgba(15, 23, 42, 0.97), rgba(15, 23, 42, 0.9));
-      box-shadow:
-        0 26px 60px rgba(15, 23, 42, 0.98),
-        0 0 0 1px rgba(148, 163, 184, 0.55);
-      overflow: hidden;
-    }
-
-    @media (min-width: 768px) {
-      #cp-main {
-        padding: 18px 16px 14px;
-      }
-    }
-
-    .cp-screen {
-      display: none;
-      max-height: calc(100vh - 190px);
-      overflow-y: auto;
-      padding-right: 2px;
-    }
-
-    .cp-screen.is-active {
-      display: block;
-    }
-
-    /* Footer */
-    .cp-footer {
-      margin-top: 4px;
-      padding: 12px 12px 10px;
-      border-radius: 22px;
-      background:
-        radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.96));
-      border: 1px solid rgba(51, 65, 85, 0.95);
-      box-shadow:
-        0 16px 40px rgba(15, 23, 42, 0.9),
-        0 0 0 1px rgba(15, 23, 42, 0.98);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      font-size: 10px;
-    }
-
-    @media (min-width: 768px) {
-      .cp-footer {
-        flex-direction: row;
-        align-items: center;
+      .app-nav {
+        width: 100%;
         justify-content: space-between;
-        gap: 12px;
-        padding: 10px 16px 9px;
+        flex-wrap: wrap;
+      }
+
+      .app-nav a {
+        flex: 1 1 calc(50% - 4px);
+        text-align: center;
       }
     }
 
-    .cp-footer-left {
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: rgba(148, 163, 184, 0.95);
+    /* Main layout */
+    .app-main {
+      flex: 1;
+      padding: 16px 14px 20px;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
     }
 
-    .cp-footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      justify-content: flex-start;
-    }
-
-    .cp-footer-link {
-      border-radius: 999px;
-      border: 1px solid rgba(75, 85, 99, 0.9);
-      padding: 5px 9px;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.92));
-      color: rgba(209, 213, 219, 0.98);
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .cp-footer-link-primary {
-      border-color: rgba(251, 191, 36, 0.85);
-      color: var(--cp-gold-soft);
-    }
-
-    .cp-footer-link:hover {
-      background: radial-gradient(circle at top, rgba(30, 64, 175, 0.9), rgba(15, 23, 42, 0.96));
-    }
-
-    .cp-footer-section-label {
-      font-size: 9px;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: rgba(148, 163, 184, 0.9);
-      flex-basis: 100%;
-    }
-
-    @media (min-width: 1024px) {
-      .cp-footer-links {
-        max-width: 640px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div id="cp-ios-app">
-    <!-- Age Verification Overlay -->
-    <div id="cp-age-gate" class="cp-age-gate">
-      <div class="cp-age-card">
-        <div class="cp-age-kicker">Cook International Casino</div>
-        <div class="cp-age-title">Age Verification Required</div>
-        <div class="cp-age-body">
-          To access the Cook International Casino app, you must confirm that you are
-          <strong>21 years of age or older</strong> and in a jurisdiction where online gaming is legally permitted.
-        </div>
-        <div class="cp-age-actions">
-          <button id="cp-age-confirm" class="cp-btn-primary" type="button">
-            I am 21 or older
-          </button>
-          <button class="cp-btn-secondary" type="button" onclick="window.location.href='https://www.cook-international.com'">
-            Exit App
-          </button>
-        </div>
-        <div class="cp-age-footer">
-          MUST BE 21+ YEARS OF AGE OR OLDER TO PLAY. WHERE LEGALLY PERMITTED ONLY.
-          PLEASE PLAY RESPONSIBLY.
-        </div>
-      </div>
-    </div>
-
-    <!-- App Shell -->
-    <div id="cp-shell" class="cp-shell is-hidden">
-      <header class="cp-shell-header">
-        <div class="cp-shell-brand">
-          <div class="cp-shell-logo" aria-hidden="true"></div>
-          <div class="cp-shell-title-block">
-            <div class="cp-shell-title">Cook International Casino</div>
-            <div class="cp-shell-subtitle">Player Account • VIP Lounge • Race Track</div>
-          </div>
-        </div>
-
-        <div class="cp-nav-dropdown">
-          <button id="cp-nav-toggle" class="cp-nav-toggle" type="button">
-            <span id="cp-current-screen-label" class="cp-nav-label">Player Account</span>
-            <span class="cp-nav-caret">▾</span>
-          </button>
-          <div id="cp-nav-menu" class="cp-nav-menu" role="menu">
-            <button
-              class="cp-nav-item cp-nav-item-primary"
-              type="button"
-              data-screen-target="screen-vip"
-              data-screen-trigger="screen-vip"
-              data-label="VIP Lounge"
-            >
-              VIP Lounge
-            </button>
-            <button
-              class="cp-nav-item"
-              type="button"
-              data-screen-target="screen-racetrack"
-              data-screen-trigger="screen-racetrack"
-              data-label="Race Track"
-            >
-              Race Track
-            </button>
-            <button
-              class="cp-nav-item"
-              type="button"
-              data-screen-target="screen-games"
-              data-screen-trigger="screen-games"
-              data-label="Games"
-            >
-              Games
-            </button>
-            <button
-              class="cp-nav-item"
-              type="button"
-              data-screen-target="screen-player"
-              data-screen-trigger="screen-player"
-              data-label="Player Account"
-            >
-              Player Account
-            </button>
-          </div>
-        </div>
-
-        <button
-          id="cp-chips-pill"
-          class="cp-chips-pill"
-          type="button"
-          data-screen-target="screen-player"
-        >
-          <span>Chips: —</span>
-        </button>
-      </header>
-
-      <main id="cp-main">
-        <!-- Player Account Screen -->
-        <section id="screen-player" class="cp-screen is-active" aria-label="Player Account">
-          <!-- Player Account layout from master source -->
-          <style>
-  html {
-    scroll-behavior: smooth;
-  }
-
-  .cp-player-landing {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    color: #f9f6ff;
-    background: radial-gradient(circle at top, #372257 0, #07030f 55%, #020007 100%);
-    padding: 60px 20px 32px; /* reduced bottom padding */
-  }
-
-  .cp-player-inner {
-    max-width: 1120px;
-    margin: 0 auto;
-    position: relative;
-  }
-
-  .cp-player-grid {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 32px;
-    margin-bottom: 40px; /* slightly tighter */
-  }
-
-  .cp-player-hero-text {
-    flex: 1 1 320px;
-    min-width: 0;
-  }
-
-  .cp-player-kicker {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: #e5e7eb;
-    margin-bottom: 8px;
-  }
-
-  .cp-player-kicker-pill {
-    padding: 3px 9px;
-    border-radius: 999px;
-    border: 1px solid rgba(248, 250, 252, 0.4);
-    background: radial-gradient(circle at top left, rgba(248, 250, 252, 0.12), transparent 55%);
-    font-weight: 600;
-  }
-
-  .cp-player-title {
-    font-size: 26px;
-    line-height: 1.25;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-    color: #fefce8;
-    text-shadow:
-      0 0 24px rgba(250, 204, 21, 0.35),
-      0 0 5px rgba(15, 23, 42, 0.9);
-  }
-
-  @media (min-width: 768px) {
-    .cp-player-title {
-      font-size: 30px;
-    }
-  }
-
-  .cp-player-subtitle {
-    font-size: 14px;
-    color: #e5e7eb;
-    margin-bottom: 14px;
-  }
-
-  .cp-player-bullets {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 12px;
-    font-size: 13px;
-    color: #d1d5db;
-  }
-
-  .cp-player-bullets li {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 6px;
-  }
-
-  .cp-player-bullets li::before {
-    content: "◆";
-    font-size: 10px;
-    color: #fbbf24;
-    margin-top: 3px;
-  }
-
-  .cp-player-hero-meta {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
-    color: rgba(209, 213, 219, 0.9);
-  }
-
-  .cp-player-hero-highlight {
-    color: #facc15;
-    font-weight: 600;
-  }
-
-  .cp-player-card {
-    flex: 1 1 320px;
-    min-width: 0;
-    border-radius: 24px;
-    background:
-      radial-gradient(circle at top left, rgba(248, 250, 252, 0.08), transparent 55%),
-      radial-gradient(circle at bottom right, rgba(30, 64, 175, 0.75), transparent 60%),
-      rgba(15, 23, 42, 0.98);
-    box-shadow:
-      0 26px 60px rgba(15, 23, 42, 0.95),
-      0 0 0 1px rgba(148, 163, 184, 0.45);
-    padding: 18px 18px 14px;
-  }
-
-  .cp-player-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-  }
-
-  .cp-player-card-title {
-    font-size: 13px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-
-  .cp-player-card-pill {
-    font-size: 10px;
-    padding: 4px 9px;
-    border-radius: 999px;
-    background: rgba(15, 23, 42, 0.9);
-    border: 1px solid rgba(148, 163, 184, 0.65);
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
-  }
-
-  .cp-player-login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-
-  .cp-player-field {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .cp-player-label {
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: rgba(209, 213, 219, 0.9);
-  }
-
-  .cp-player-input {
-    border-radius: 999px;
-    border: 1px solid rgba(148, 163, 184, 0.75);
-    background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.96));
-    padding: 7px 12px;
-    font-size: 13px;
-    color: #f9fafb;
-  }
-
-  .cp-player-input::placeholder {
-    color: rgba(148, 163, 184, 0.9);
-  }
-
-  .cp-player-actions-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    align-items: center;
-    justify-content: flex-start;
-  }
-
-  .cp-player-btn-primary {
-    border-radius: 999px;
-    border: none;
-    padding: 8px 16px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    background: linear-gradient(135deg, #f97316, #facc15, #fde68a);
-    color: #111827;
-    cursor: pointer;
-    box-shadow:
-      0 18px 40px rgba(251, 146, 60, 0.65),
-      0 0 0 1px rgba(251, 191, 36, 0.9);
-  }
-
-  .cp-player-btn-secondary {
-    border-radius: 999px;
-    border: 1px solid rgba(148, 163, 184, 0.75);
-    padding: 7px 13px;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.94));
-    color: rgba(209, 213, 219, 0.96);
-    cursor: pointer;
-  }
-
-  .cp-player-meta-row {
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 10px;
-    font-size: 11px;
-    gap: 8px 12px;
-    color: rgba(209, 213, 219, 0.9);
-  }
-
-  .cp-player-meta-row span {
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
-  }
-
-  .cp-player-meta-accent {
-    color: #fbbf24;
-    font-weight: 600;
-  }
-
-  .cp-player-footer {
-    margin-top: 20px;
-    padding-top: 12px;
-    border-top: 1px solid rgba(51, 65, 85, 0.85);
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: rgba(148, 163, 184, 0.9);
-  }
-
-  .cp-player-badges-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 8px;
-  }
-
-  .cp-player-badge {
-    border-radius: 999px;
-    padding: 4px 8px;
-    border: 1px dashed rgba(148, 163, 184, 0.7);
-    font-size: 9px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: rgba(209, 213, 219, 0.96);
-  }
-</style>
-
-<div class="cp-player-landing" id="cp-player-landing">
-  <div class="cp-player-inner">
-    <div class="cp-player-grid" aria-labelledby="cp-player-title">
-      <div class="cp-player-hero-text">
-        <div class="cp-player-kicker">
-          <span class="cp-player-kicker-pill">Player Account &amp; Virtual Cage</span>
-          <span>Cook International Casino</span>
-        </div>
-        <h1 id="cp-player-title" class="cp-player-title">
-          Technology Services at the Speed of Business
-        </h1>
-        <p class="cp-player-subtitle">
-          Open a shared wallet Player Account that works seamlessly across Cook International Casino,
-          the VIP Lounge, and all virtual games and promotions.
-        </p>
-        <ul class="cp-player-bullets">
-          <li>Fast deposits and withdrawals with integrated Virtual Cage.</li>
-          <li>Preferred payment methods including Stripe and PayPal.</li>
-          <li>Secure PIN-based access with easy reset and account recovery.</li>
-        </ul>
-        <div class="cp-player-hero-meta">
-          <span class="cp-player-hero-highlight">One Account Per Device</span> • Centralized balance across all games
-        </div>
-      </div>
-
-      <div class="cp-player-card" aria-label="Player Account Login">
-        <div class="cp-player-card-header">
-          <div class="cp-player-card-title">Sign In to Your Player Account</div>
-          <div class="cp-player-card-pill">Shared Wallet</div>
-        </div>
-
-        <form class="cp-player-login-form" id="cp-player-login-form">
-          <div class="cp-player-field">
-            <label for="cp-player-username" class="cp-player-label">Username or E-mail</label>
-            <input
-              id="cp-player-username"
-              class="cp-player-input"
-              type="text"
-              autocomplete="username"
-              placeholder="Enter your username or email"
-            />
-          </div>
-          <div class="cp-player-field">
-            <label for="cp-player-pin" class="cp-player-label">Player PIN</label>
-            <input
-              id="cp-player-pin"
-              class="cp-player-input"
-              type="password"
-              autocomplete="current-password"
-              placeholder="4–6 digit PIN"
-            />
-          </div>
-
-          <div class="cp-player-actions-row">
-            <button type="submit" class="cp-player-btn-primary">
-              Enter the Casino
-            </button>
-            <button type="button" class="cp-player-btn-secondary" id="cp-player-forgot-pin">
-              Forgot PIN
-            </button>
-          </div>
-        </form>
-
-        <div class="cp-player-meta-row">
-          <span>One account per device.</span>
-          <span>
-            Shared wallet balance:
-            <span class="cp-player-meta-accent" id="cp-player-wallet-balance">Loading…</span>
-          </span>
-        </div>
-
-        <div class="cp-player-footer">
-          MUST BE 21+ YEARS OF AGE OR OLDER TO PLAY. WHERE LEGALLY PERMITTED ONLY. PLEASE PLAY RESPONSIBLY.
-          <div class="cp-player-badges-row">
-            <div class="cp-player-badge">Curaçao Gaming Authority</div>
-            <div class="cp-player-badge">Licence No: OGL/2024/558/0973</div>
-            <div class="cp-player-badge">Shared Wallet Player Account</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-        </section>
-
-        <!-- VIP Lounge Screen -->
-        <section id="screen-vip" class="cp-screen" aria-label="VIP Lounge">
-          <!-- VIP Lounge block from master source, patched to use in-app navigation -->
-          <div id="cook-vip-lounge">
-  <style>
-    #cook-vip-lounge {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: #f9fafb;
-    }
-
-    #cook-vip-lounge .vip-wrapper {
-      position: relative;
-      max-width: 1120px;
-      margin: 40px auto 60px;
-      padding: 28px 22px 22px;
-      border-radius: 28px;
-      overflow: hidden;
-
-      /* Diamond-style, Japanese-wallpaper casino wall */
-      background-color: #020617;
-      background-image:
-        radial-gradient(circle at 0% 0%, rgba(248, 250, 252, 0.06), transparent 55%),
-        radial-gradient(circle at 100% 0%, rgba(251, 191, 36, 0.18), transparent 55%),
-        repeating-linear-gradient(
-          135deg,
-          rgba(15, 23, 42, 0.85) 0,
-          rgba(15, 23, 42, 0.85) 12px,
-          rgba(30, 64, 175, 0.9) 12px,
-          rgba(30, 64, 175, 0.9) 14px
-        );
-      box-shadow:
-        0 30px 60px rgba(15, 23, 42, 0.95),
-        0 0 0 1px rgba(15, 23, 42, 0.9);
-    }
-
-    #cook-vip-lounge .vip-glass {
-      position: relative;
+    .app-card {
       border-radius: 24px;
-      padding: 20px 18px 16px;
+      padding: 18px 16px 20px;
       background:
-        radial-gradient(circle at top left, rgba(248, 250, 252, 0.06), transparent 55%),
-        radial-gradient(circle at bottom right, rgba(251, 191, 36, 0.25), transparent 60%),
-        rgba(15, 23, 42, 0.96);
-      box-shadow:
-        inset 0 0 0 1px rgba(148, 163, 184, 0.65),
-        0 26px 50px rgba(15, 23, 42, 0.95);
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.24), rgba(15, 23, 42, 0.98));
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.9);
     }
 
-    @media (min-width: 768px) {
-      #cook-vip-lounge .vip-glass {
-        padding: 22px 20px 18px;
-      }
+    .app-view {
+      display: none;
     }
 
-    #cook-vip-lounge .vip-header-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
+    .app-view.active {
+      display: block;
     }
 
-    #cook-vip-lounge .vip-header-main {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    #cook-vip-lounge .vip-kicker {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
+    .app-view h1 {
+      font-size: 20px;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: rgba(209, 213, 219, 0.96);
-    }
-
-    #cook-vip-lounge .vip-kicker-pill {
-      padding: 3px 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(248, 250, 252, 0.5);
-      background: radial-gradient(circle at top left, rgba(248, 250, 252, 0.12), transparent 55%);
-      font-weight: 600;
-      text-shadow: 0 0 12px rgba(15, 23, 42, 0.9);
-    }
-
-    #cook-vip-lounge .vip-title {
-      font-size: 24px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: #fefce8;
-      text-shadow:
-        0 0 24px rgba(250, 204, 21, 0.35),
-        0 0 5px rgba(15, 23, 42, 0.9);
-    }
-
-    @media (min-width: 768px) {
-      #cook-vip-lounge .vip-title {
-        font-size: 26px;
-      }
-    }
-
-    #cook-vip-lounge .vip-subtitle {
-      font-size: 13px;
-      color: rgba(226, 232, 240, 0.96);
-      max-width: 520px;
-    }
-
-    #cook-vip-lounge .vip-meta-pill {
-      font-size: 10px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: rgba(209, 213, 219, 0.96);
-      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.9));
-    }
-
-    #cook-vip-lounge .vip-main-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-      gap: 18px;
-      margin-bottom: 20px;
-    }
-
-    @media (max-width: 900px) {
-      #cook-vip-lounge .vip-main-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    #cook-vip-lounge .vip-copy {
-      font-size: 13px;
-      color: rgba(226, 232, 240, 0.96);
-      line-height: 1.5;
-    }
-
-    #cook-vip-lounge .vip-copy p {
       margin: 0 0 8px;
     }
 
-    #cook-vip-lounge .vip-copy-legal {
+    .app-view p {
+      font-size: 14px;
+      margin: 0 0 6px;
+      color: rgba(209, 213, 219, 0.96);
+    }
+
+    /* Footer */
+    .app-footer {
+      border-top: 1px solid rgba(15, 23, 42, 0.95);
+      background: #020617;
+      padding: 10px 16px 12px;
       font-size: 11px;
+      color: var(--muted);
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .footer-legal {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 10px;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: rgba(148, 163, 184, 0.96);
-      margin-top: 10px;
     }
 
-    #cook-vip-lounge .vip-copy-legal strong {
+    .footer-legal a {
+      color: #bfdbfe;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .footer-legal a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-credit a {
       color: #facc15;
-      font-weight: 600;
+      text-decoration: none;
     }
 
-    #cook-vip-lounge .vip-copy-legal span {
-      white-space: nowrap;
+    .footer-credit a:hover {
+      text-decoration: underline;
     }
 
-    #cook-vip-lounge .vip-login-card {
-      border-radius: 20px;
-      padding: 14px 13px 10px;
-      background:
-        radial-gradient(circle at top left, rgba(248, 250, 252, 0.08), transparent 55%),
-        radial-gradient(circle at bottom right, rgba(30, 64, 175, 0.65), transparent 60%),
-        rgba(15, 23, 42, 0.98);
-      box-shadow:
-        0 18px 40px rgba(15, 23, 42, 0.95),
-        0 0 0 1px rgba(148, 163, 184, 0.55);
-    }
-
-    #cook-vip-lounge .vip-login-header {
+    /* 21+ age gate overlay */
+    .age-gate-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), #020617);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 10px;
+      justify-content: center;
+      z-index: 999;
+      padding: 18px;
     }
 
-    #cook-vip-lounge .vip-login-title {
+    .age-gate-overlay.hidden {
+      display: none;
+    }
+
+    .age-gate-card {
+      max-width: 420px;
+      width: 100%;
+      border-radius: 24px;
+      padding: 20px 18px 18px;
+      background:
+        radial-gradient(circle at top, rgba(30, 64, 175, 0.38), rgba(15, 23, 42, 0.98));
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.96),
+        0 0 0 1px rgba(15, 23, 42, 1);
+    }
+
+    .age-gate-title {
+      font-size: 18px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      color: #fef3c7;
+    }
+
+    .age-gate-sub {
       font-size: 13px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
+      color: rgba(209, 213, 219, 0.98);
+      margin-bottom: 12px;
     }
 
-    #cook-vip-lounge .vip-login-pill {
-      font-size: 10px;
-      padding: 4px 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: rgba(209, 213, 219, 0.96);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.9));
+    .age-gate-sub strong {
+      color: #fde68a;
     }
 
-    #cook-vip-lounge .vip-login-form {
+    .age-gate-form-row {
       display: flex;
-      flex-direction: column;
       gap: 8px;
       margin-bottom: 8px;
     }
 
-    #cook-vip-lounge .vip-field {
+    .age-gate-field {
+      flex: 1;
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
 
-    #cook-vip-lounge .vip-label {
+    .age-gate-field label {
       font-size: 11px;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: rgba(209, 213, 219, 0.96);
+      color: var(--muted);
     }
 
-    #cook-vip-lounge .vip-input {
+    .age-gate-field input,
+    .age-gate-field select {
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.96));
-      padding: 7px 11px;
+      border: 1px solid rgba(55, 65, 81, 0.95);
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text);
       font-size: 13px;
-      color: #f9fafb;
+      padding: 6px 10px;
+      outline: none;
     }
 
-    #cook-vip-lounge .vip-input::placeholder {
-      color: rgba(148, 163, 184, 0.9);
+    .age-gate-field input:focus,
+    .age-gate-field select:focus {
+      border-color: rgba(56, 189, 248, 0.9);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.7);
     }
 
-    #cook-vip-lounge .vip-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+    .age-gate-cert {
+      margin: 10px 0;
+      font-size: 12px;
+      color: rgba(209, 213, 219, 0.96);
+    }
+
+    .age-gate-cert input[type="checkbox"] {
+      margin-right: 6px;
+    }
+
+    .age-gate-button {
+      width: 100%;
       margin-top: 4px;
-    }
-
-    #cook-vip-lounge .vip-btn-primary {
       border-radius: 999px;
-      border: none;
-      padding: 7px 14px;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      background: linear-gradient(135deg, #f97316, #facc15, #fde68a);
+      border: 1px solid rgba(15, 23, 42, 1);
+      background: radial-gradient(circle at 0% 0%, #facc15, #f97316);
       color: #111827;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 8px 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
       cursor: pointer;
       box-shadow:
-        0 16px 35px rgba(251, 146, 60, 0.65),
-        0 0 0 1px rgba(251, 191, 36, 0.9);
+        0 16px 32px rgba(15, 23, 42, 0.98),
+        0 0 0 1px rgba(0, 0, 0, 1);
     }
 
-    #cook-vip-lounge .vip-btn-secondary {
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.75);
-      padding: 6px 12px;
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.92));
-      color: rgba(209, 213, 219, 0.96);
-      cursor: pointer;
+    .age-gate-button:hover {
+      filter: brightness(1.05);
     }
 
-    #cook-vip-lounge .vip-login-meta {
+    .age-gate-error {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--danger);
+      min-height: 16px;
+    }
+
+    .age-gate-legal {
+      margin-top: 12px;
       font-size: 11px;
-      color: rgba(209, 213, 219, 0.9);
-      margin-top: 6px;
+      color: rgba(156, 163, 175, 0.98);
     }
 
-    #cook-vip-lounge .vip-login-meta span {
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
+    .age-gate-legal strong {
+      color: #fca5a5;
     }
 
-    #cook-vip-lounge .vip-login-error {
-      color: #fed7d7;
-    }
-
-    #cook-vip-lounge .vip-login-success {
-      color: #bbf7d0;
-    }
-
-    #cook-vip-lounge .vip-login-footer {
+    /* Small helper text for placeholders */
+    .placeholder-note {
       margin-top: 10px;
-      padding-top: 8px;
-      border-top: 1px solid rgba(51, 65, 85, 0.9);
-      font-size: 10px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: rgba(148, 163, 184, 0.96);
-    }
-
-    #cook-vip-lounge .vip-login-footer strong {
-      color: #facc15;
-      font-weight: 600;
-    }
-
-    #cook-vip-lounge .vip-game-select-row {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 8px;
-    }
-
-    #cook-vip-lounge .vip-game-select-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: rgba(148, 163, 184, 0.96);
-    }
-
-    #cook-vip-lounge .vip-game-select {
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.75);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.94));
-      padding: 6px 11px;
+      padding: 8px 10px;
+      border-radius: 12px;
       font-size: 12px;
-      color: #f9fafb;
-    }
-
-    #cook-vip-lounge .vip-game-select option {
-      color: #0f172a;
-    }
-
-    /* Games grid */
-    #cook-vip-lounge .vip-games-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    #cook-vip-lounge .vip-tile {
-      position: relative;
-      border-radius: 18px;
-      overflow: hidden;
-      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.98));
-      box-shadow:
-        0 20px 40px rgba(15, 23, 42, 0.95),
-        0 0 0 1px rgba(30, 64, 175, 0.45);
-      cursor: pointer;
-    }
-
-    #cook-vip-lounge .vip-tile-inner {
-      position: relative;
-      padding: 12px 11px 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      z-index: 1;
-    }
-
-    #cook-vip-lounge .vip-tile-label {
-      font-size: 11px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: #fefce8;
-    }
-
-    #cook-vip-lounge .vip-tile-sub {
-      font-size: 11px;
-      color: rgba(226, 232, 240, 0.96);
-    }
-
-    #cook-vip-lounge .vip-tile-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: rgba(209, 213, 219, 0.96);
-    }
-
-    #cook-vip-lounge .vip-tile-cta {
-      font-weight: 600;
-      color: #facc15;
-    }
-
-    #cook-vip-lounge .vip-tile-tag {
-      font-size: 9px;
-      padding: 3px 7px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.94));
-    }
-
-    #cook-vip-lounge .vip-game {
-      background-size: cover;
-      background-position: center;
-    }
-
-    /* Game-specific backgrounds using real artwork */
-    #cook-vip-lounge .vip-game-blackjack {
-      background-image: url("https://www.cook-international.com/s/VIPBlackjack.png");
-    }
-
-    #cook-vip-lounge .vip-game-baccarat {
-      background-image: url("https://www.cook-international.com/s/VIPBaccarat01.png");
-    }
-
-    #cook-vip-lounge .vip-game-vip-texas {
-      background-image: url("https://www.cook-international.com/s/VIPTexasHoldEm.png");
-    }
-
-    #cook-vip-lounge .vip-game-caribbean {
-      background-image: url("https://www.cook-international.com/s/VIPCaribbeanStudPoker01.png");
-    }
-
-    #cook-vip-lounge .vip-game-pai-gow {
-      background-image: url("https://www.cook-international.com/s/VIPPaiGowPoker01.png");
-    }
-
-    #cook-vip-lounge .vip-game-three-card {
-      background-image: url("https://www.cook-international.com/s/VIPThreeCardPoker01.png");
-    }
-
-    #cook-vip-lounge .vip-game-mississippi {
-      background-image: url("https://www.cook-international.com/s/VIPMississippiStudPoker01.png");
-    }
-
-    #cook-vip-lounge .vip-game-high-roller-roulette {
-      background-image: url("https://www.cook-international.com/s/VIPHighRollerRoulette01.png");
-    }
-
-    #cook-vip-lounge .vip-game-high-roller-craps {
-      background-image: url("https://www.cook-international.com/s/VIPHighRollerCraps01.png");
-    }
-
-    #cook-vip-lounge .vip-hero-orbit {
-      position: absolute;
-      inset: -40%;
-      background:
-        radial-gradient(circle at 0% 0%, rgba(248, 250, 252, 0.22), transparent 55%),
-        radial-gradient(circle at 100% 0%, rgba(251, 191, 36, 0.32), transparent 55%),
-        radial-gradient(circle at 0% 100%, rgba(37, 99, 235, 0.28), transparent 60%);
-      opacity: 0.45;
-      mix-blend-mode: screen;
-      pointer-events: none;
-    }
-
-    #cook-vip-lounge .vip-hero-orbit-inner {
-      position: absolute;
-      inset: 14%;
-      border-radius: 999px;
-      border: 1px dashed rgba(248, 250, 252, 0.25);
-      box-shadow:
-        0 0 40px rgba(15, 23, 42, 0.9),
-        inset 0 0 50px rgba(15, 23, 42, 0.9);
-    }
-
-    #cook-vip-lounge .vip-lucky-wheel {
-      margin-top: 10px;
-      padding: 10px 11px 8px;
-      border-radius: 18px;
-      background:
-        radial-gradient(circle at top, rgba(251, 191, 36, 0.15), transparent 55%),
-        linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.92));
-      border: 1px solid rgba(251, 191, 36, 0.55);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 12px;
-    }
-
-    #cook-vip-lounge .vip-lucky-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    #cook-vip-lounge .vip-lucky-title {
-      font-size: 12px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: #fefce8;
-    }
-
-    #cook-vip-lounge .vip-lucky-pill {
-      font-size: 10px;
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(248, 250, 252, 0.7);
-      background: rgba(15, 23, 42, 0.95);
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-    }
-
-    #cook-vip-lounge .vip-lucky-body {
-      font-size: 12px;
-      color: rgba(226, 232, 240, 0.96);
-    }
-
-    #cook-vip-lounge .vip-lucky-cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    #cook-vip-lounge .vip-lucky-link {
-      border-radius: 999px;
-      padding: 6px 12px;
-      border: 1px solid rgba(148, 163, 184, 0.8);
-      font-size: 10px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: rgba(209, 213, 219, 0.98);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.94));
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    #cook-vip-lounge .vip-lucky-link-primary {
-      border-color: rgba(251, 191, 36, 0.85);
-      color: #facc15;
-    }
-
-    #cook-vip-lounge .vip-footer {
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(51, 65, 85, 0.9);
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px 12px;
-      font-size: 10px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: rgba(148, 163, 184, 0.96);
-    }
-
-    #cook-vip-lounge .vip-footer span.vip-highlight {
-      color: #facc15;
-      font-weight: 600;
-    }
-
-    #cook-vip-lounge .vip-footer span {
-      white-space: nowrap;
-    }
-
-    #cook-vip-lounge .vip-pulse-ring {
-      position: absolute;
-      width: 260px;
-      height: 260px;
-      border-radius: 999px;
-      border: 1px solid rgba(251, 191, 36, 0.4);
-      box-shadow:
-        0 0 40px rgba(251, 191, 36, 0.8),
-        inset 0 0 40px rgba(30, 64, 175, 0.7);
-      inset: auto -100px -150px auto;
-      opacity: 0.8;
-      pointer-events: none;
-      filter: blur(0.3px);
-    }
-
-    #cook-vip-lounge .vip-light-sweep {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 0% 50%, rgba(248, 250, 252, 0.08), transparent 55%),
-        radial-gradient(circle at 100% 50%, rgba(251, 191, 36, 0.24), transparent 60%);
-      opacity: 0.8;
-      mix-blend-mode: screen;
-      animation: vipLightSweep 18s linear infinite;
-      pointer-events: none;
-    }
-
-    #cook-vip-lounge .vip-pulse-orbit {
-      position: absolute;
-      width: 520px;
-      height: 520px;
-      border-radius: 999px;
-      border: 2px solid rgba(251, 191, 36, 0.2);
-      box-shadow:
-        0 0 60px rgba(251, 191, 36, 0.4),
-        inset 0 0 40px rgba(30, 64, 175, 0.35);
-      inset: auto -120px -260px auto;
-      opacity: 0.55;
-      pointer-events: none;
-    }
-
-    @keyframes vipLightSweep {
-      0% {
-        transform: translateX(-20%);
-        opacity: 0.5;
-      }
-      50% {
-        transform: translateX(10%);
-        opacity: 0.8;
-      }
-      100% {
-        transform: translateX(-20%);
-        opacity: 0.5;
-      }
-    }
-
-    @media (max-width: 900px) {
-      #cook-vip-lounge .vip-pulse-ring,
-      #cook-vip-lounge .vip-pulse-orbit {
-        display: none;
-      }
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px dashed rgba(148, 163, 184, 0.6);
     }
   </style>
-
-  <div class="vip-wrapper">
-    <div class="vip-hero-orbit"></div>
-    <div class="vip-hero-orbit-inner"></div>
-    <div class="vip-pulse-ring"></div>
-    <div class="vip-pulse-orbit"></div>
-    <div class="vip-light-sweep"></div>
-
-    <div class="vip-glass">
-      <div class="vip-header-row">
-        <div class="vip-header-main">
-          <div class="vip-kicker">
-            <span class="vip-kicker-pill">VIP Lounge</span>
-            <span>Cook International Casino</span>
-          </div>
-          <h2 class="vip-title">High Roller VIP Lounge</h2>
-          <p class="vip-subtitle">
-            An invitation-only experience featuring VIP Blackjack, VIP Baccarat, VIP Texas Hold'Em, and our full suite
-            of high-limit table games and exclusive promotions for Cook International Casino's most valued players.
-          </p>
-        </div>
-        <div>
-          <div class="vip-meta-pill">VIP Lounge • Player Account Required</div>
-        </div>
+</head>
+<body>
+  <!-- 21+ DOB Gate -->
+  <div id="age-gate-overlay" class="age-gate-overlay">
+    <div class="age-gate-card">
+      <div class="age-gate-title">Age &amp; Eligibility Check</div>
+      <div class="age-gate-sub">
+        To access <strong>Cook International Casino</strong>, you must be
+        <strong>21 years of age or older</strong> and located in a jurisdiction
+        where online gaming is legally permitted.
       </div>
 
-      <div class="vip-main-grid">
-        <div class="vip-copy">
-          <p>
-            The Cook International Casino VIP Lounge is designed for serious players who want high-limit action,
-            bespoke service, and access to the most exclusive games on the floor. With your VIP Player Account, you can
-            move seamlessly between VIP Blackjack, VIP Baccarat, VIP Texas Hold'Em, Caribbean Stud Poker, Pai Gow Poker,
-            Three Card Poker, Mississippi Stud Poker, High Roller Roulette, and High Roller Craps.
-          </p>
-          <p>
-            Your shared wallet Player Account keeps your chip balance synchronized across all VIP games, the Lucky Wheel
-            &amp; Rainbow Wheel, and special high roller promotions, so you can focus on the game instead of chasing
-            balances around the casino.
-          </p>
-          <div class="vip-copy-legal">
-            <span><strong>One Account Per Device</strong></span> •
-            <span>VIP Player Account Required for VIP Games</span> •
-            <span>Must Be 21+ • Please Play Responsibly</span>
+      <form id="age-gate-form">
+        <div class="age-gate-form-row">
+          <div class="age-gate-field">
+            <label for="dob-month">Month</label>
+            <select id="dob-month" required>
+              <option value="">MM</option>
+              <option value="1">01</option>
+              <option value="2">02</option>
+              <option value="3">03</option>
+              <option value="4">04</option>
+              <option value="5">05</option>
+              <option value="6">06</option>
+              <option value="7">07</option>
+              <option value="8">08</option>
+              <option value="9">09</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+            </select>
+          </div>
+          <div class="age-gate-field">
+            <label for="dob-day">Day</label>
+            <input id="dob-day" type="number" min="1" max="31" placeholder="DD" required />
+          </div>
+          <div class="age-gate-field">
+            <label for="dob-year">Year</label>
+            <input id="dob-year" type="number" min="1900" max="2100" placeholder="YYYY" required />
           </div>
         </div>
 
-        <div class="vip-login-card" id="vip-login-card">
-          <div class="vip-login-header">
-            <div class="vip-login-title">VIP Player Account Login</div>
-            <div class="vip-login-pill">Shared Wallet</div>
-          </div>
-
-          <form class="vip-login-form" id="vip-login-form">
-            <div class="vip-field">
-              <label for="vip-login-username" class="vip-label">VIP Username or E-mail</label>
-              <input
-                id="vip-login-username"
-                class="vip-input"
-                type="text"
-                autocomplete="username"
-                placeholder="Enter your VIP username or email"
-              />
-            </div>
-            <div class="vip-field">
-              <label for="vip-login-pin" class="vip-label">Player PIN</label>
-              <input
-                id="vip-login-pin"
-                class="vip-input"
-                type="password"
-                autocomplete="current-password"
-                placeholder="4–6 digit PIN"
-              />
-            </div>
-
-            <div class="vip-actions">
-              <button type="submit" class="vip-btn-primary" id="vip-login-btn">
-                Enter VIP Lounge
-              </button>
-              <button type="button" class="vip-btn-secondary" id="vip-forgot-pin">
-                Forgot PIN
-              </button>
-            </div>
-          </form>
-
-          <div class="vip-login-meta" id="vip-login-meta">
-            <span>VIP Access • High Roller Limits • Shared Wallet</span>
-          </div>
-
-          <div class="vip-login-footer">
-            <strong>Must Be 21+ Years of Age or Older to Play.</strong>
-            Where legally permitted only. Please play responsibly.
-          </div>
-        </div>
-      </div>
-
-      <div class="vip-game-select-row">
-        <div class="vip-game-select-label">Jump directly to a VIP game or promotion:</div>
-        <select class="vip-game-select" id="vip-game-select">
-          <option value="">Select a VIP Game…</option>
-          <option value="/vip-blackjack">VIP Blackjack</option>
-          <option value="/vip-baccarat">VIP Baccarat</option>
-          <option value="/vip/vip-texas-holdem">VIP Texas Hold'Em</option>
-          <option value="/vip/caribbean-stud-poker">VIP Caribbean Stud Poker</option>
-          <option value="/vip/pai-gow-poker">VIP Pai Gow Poker</option>
-          <option value="/vip/three-card-poker">VIP Three Card Poker</option>
-          <option value="/vip/mississippi-stud-poker">VIP Mississippi Stud Poker</option>
-          <option value="/vip/high-roller-roulette">High Roller Roulette</option>
-          <option value="/vip/high-roller-craps">High Roller Craps</option>
-          <option value="/lucky-wheel">Lucky Wheel</option>
-          <option value="/rainbow-wheel">Rainbow Wheel</option>
-          <option value="/race-track">Cook Downs Virtual Horse Race</option>
-        </select>
-      </div>
-
-      <div class="vip-games-grid" id="vip-games-grid">
-        <div class="vip-tile vip-game vip-game-blackjack" data-url="/vip-blackjack">
-          <div class="vip-tile-inner">
-            <div class="vip-tile-label">VIP Blackjack</div>
-            <div class="vip-tile-sub">High-limit blackjack with bespoke VIP service.</div>
-            <div class="vip-tile-meta">
-              <span class="vip-tile-tag">High Roller Tables</span>
-              <span class="vip-tile-cta">Play Now</span>
-            </div>
-          </div>
+        <div class="age-gate-cert">
+          <label>
+            <input type="checkbox" id="dob-cert-checkbox" required />
+            I certify that I am at least 21 years of age, not on any exclusion or
+            self-exclusion list, and that online play is permitted in my jurisdiction.
+          </label>
         </div>
 
-        <div class="vip-tile vip-game vip-game-baccarat" data-url="/vip-baccarat">
-          <div class="vip-tile-inner">
-            <div class="vip-tile-label">VIP Baccarat</div>
-            <div class="vip-tile-sub">Elegant high-limit baccarat for discerning players.</div>
-            <div class="vip-tile-meta">
-              <span class="vip-tile-tag">Salon Privé</span>
-              <span class="vip-tile-cta">Play Now</span>
-            </div>
-          </div>
-        </div>
+        <button type="submit" class="age-gate-button">Enter Casino</button>
+        <div id="age-gate-error" class="age-gate-error"></div>
 
-        <div class="vip-tile vip-game vip-game-vip-texas" data-url="/vip/vip-texas-holdem">
-          <div class="vip-tile-inner">
-            <div class="vip-tile-label">VIP Texas Hold'Em</div>
-            <div class="vip-tile-sub">High-stakes Hold'Em action in an exclusive setting.</div>
-            <div class="vip-tile-meta">
-              <span class="vip-tile-tag">Head-to-Head</span>
-              <span class="vip-tile-cta">Play Now</span>
-            </div>
-          </div>
+        <div class="age-gate-legal">
+          <strong>Important:</strong> You may be asked to provide documentation to verify
+          age, identity, and eligibility before withdrawals are processed.
         </div>
-
-        <div class="vip-tile vip-game vip-game-caribbean" data-url="/vip/caribbean-stud-poker">
-          <div class="vip-tile-inner">
-            <div class="vip-tile-label">Caribbean Stud Poker</div>
-            <div class="vip-tile-sub">Classic stud poker with a Caribbean twist.</div>
-            <div class="vip-tile-meta">
-              <span class="vip-tile-tag">Progressive Jackpots</span>
-              <span class="vip-tile-cta">Play Now</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="vip-tile vip-game vip-game-pai-gow" data-url="/vip/pai-gow-poker">
-          <div class="vip-tile-inner">
-            <div class="vip-tile-label">Pai Gow Poker</div>
-            <div class="vip-tile-sub">Strategic Pai Gow with VIP limits.</div>
-            <div class="vip-tile-meta">
-              <span class="vip-tile-tag">Dual Hand Action</span>
-              <span class="vip-tile-cta">Play Now</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="vip-tile vip-game vip-game-three-card" data-url="/vip/three-card-poker">
-          <div class="vip-tile-inner">
-            <div class="vip-tile-label">Three Card Poker</div>
-            <div class="vip-tile-sub">Fast-paced three-card excitement.</div>
-            <div class="vip-tile-meta">
-              <span class="vip-tile-tag">Bonus Payouts</span>
-              <span class="vip-tile-cta">Play Now</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="vip-tile vip-game vip-game-mississippi" data-url="/vip/mississippi-stud-poker">
-          <div class="vip-tile-inner">
-            <div class="vip-tile-label">Mississippi Stud Poker</div>
-            <div class="vip-tile-sub">High volatility stud poker for high rollers.</div>
-            <div class="vip-tile-meta">
-              <span class="vip-tile-tag">Big Multipliers</span>
-              <span class="vip-tile-cta">Play Now</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="vip-tile vip-game vip-game-high-roller-roulette" data-url="/vip/high-roller-roulette">
-          <div class="vip-tile-inner">
-            <div class="vip-tile-label">High Roller Roulette</div>
-            <div class="vip-tile-sub">Premium roulette layout with elevated limits.</div>
-            <div class="vip-tile-meta">
-              <span class="vip-tile-tag">VIP Pit</span>
-              <span class="vip-tile-cta">Play Now</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="vip-tile vip-game vip-game-high-roller-craps" data-url="/vip/high-roller-craps">
-          <div class="vip-tile-inner">
-            <div class="vip-tile-label">High Roller Craps</div>
-            <div class="vip-tile-sub">Signature craps table for serious dice shooters.</div>
-            <div class="vip-tile-meta">
-              <span class="vip-tile-tag">VIP Dice</span>
-              <span class="vip-tile-cta">Play Now</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="vip-lucky-wheel">
-        <div class="vip-lucky-header">
-          <div class="vip-lucky-title">Lucky Wheel &amp; Rainbow Wheel</div>
-          <div class="vip-lucky-pill">VIP Promotions</div>
-        </div>
-        <div class="vip-lucky-body">
-          Spin the Lucky Wheel and Rainbow Wheel promotions for bonus chips, free spins, and special VIP rewards powered
-          by your Player Account shared wallet.
-        </div>
-        <div class="vip-lucky-cta-row">
-          <a class="vip-lucky-link vip-lucky-link-primary" href="/lucky-wheel">Go to Lucky Wheel</a>
-          <a class="vip-lucky-link" href="/rainbow-wheel">Go to Rainbow Wheel</a>
-          <a class="vip-lucky-link" href="/race-track">Go to Cook Downs Virtual Horse Race</a>
-        </div>
-      </div>
-
-      <div class="vip-footer">
-        <span class="vip-highlight">VIP Player Account Required.</span>
-        <span>One Account Per Device.</span>
-        <span>Must Be 21+ • Where Legally Permitted • Please Play Responsibly.</span>
-      </div>
+      </form>
     </div>
+  </div>
+
+  <!-- App shell -->
+  <div class="app-shell">
+    <header id="app-header" class="app-header">
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="/cook-international-casino-icon-192.png" alt="Cook International Casino" />
+        </div>
+        <span>Cook International Casino</span>
+      </div>
+      <nav class="app-nav">
+        <a href="#player-account" data-route-link="player-account" class="active">Player Account</a>
+        <a href="#vip-lounge" data-route-link="vip-lounge">VIP Lounge</a>
+        <a href="#slots" data-route-link="slots">Slots</a>
+        <a href="#race-track" data-route-link="race-track">Race Track</a>
+      </nav>
+    </header>
+
+    <main id="app-main" class="app-main">
+      <!-- Player Account view (Stage 1 placeholder) -->
+      <section id="view-player-account" class="app-view active" data-route="player-account">
+        <div class="app-card">
+          <h1>Player Account</h1>
+          <p>
+            This is the Player Account home screen. On first login, this is the
+            default landing page after you pass the 21+ gate.
+          </p>
+          <p class="placeholder-note">
+            Stage 1: placeholder view. In the next stage we will paste in your full
+            Player Account source code (including login, shared wallet, and account
+            management) directly into this section.
+          </p>
+        </div>
+      </section>
+
+      <!-- VIP Lounge view (Stage 1 placeholder; we will drop your full VIP block here) -->
+      <section id="view-vip-lounge" class="app-view" data-route="vip-lounge">
+        <div class="app-card">
+          <h1>VIP Lounge</h1>
+          <p>
+            Exclusive VIP tables, high-limit games, and High Roller experiences.
+          </p>
+          <p class="placeholder-note">
+            Stage 1: placeholder view. In the next stage, we will replace this block
+            with your full VIP Lounge code (the big <code>&lt;div id="cook-vip-lounge"&gt;</code>
+            block you pasted) so it lives natively inside the app.
+          </p>
+        </div>
+      </section>
+
+      <!-- Slots view (Stage 1 placeholder) -->
+      <section id="view-slots" class="app-view" data-route="slots">
+        <div class="app-card">
+          <h1>Slots</h1>
+          <p>
+            Spin the reels on Cook International’s featured slots.
+          </p>
+          <p class="placeholder-note">
+            Stage 1: placeholder. Next stage, we’ll embed your Cook International Slots
+            HTML/JS here so it uses the same shared wallet as the other games.
+          </p>
+        </div>
+      </section>
+
+      <!-- Race Track view (Stage 1 placeholder) -->
+      <section id="view-race-track" class="app-view" data-route="race-track">
+        <div class="app-card">
+          <h1>Cook Downs Virtual Race Track</h1>
+          <p>
+            Bet on the virtual horses and watch them thunder down the track at Cook Downs.
+          </p>
+          <p class="placeholder-note">
+            Stage 1: placeholder. Next stage we’ll drop in your fully working
+            Cook Downs race track code (the sprite canvas version that now correctly
+            debits/credits via the shared wallet and Apps Script).
+          </p>
+        </div>
+      </section>
+
+      <!-- Footer-only “legal” views will be added in later stages:
+           Terms & Conditions, Privacy Policy, Account Security, Game Rules,
+           Rewards Program, Eligible Jurisdictions, Licensing & Regulatory,
+           Have a Gambling Problem? -->
+    </main>
+
+    <footer id="app-footer" class="app-footer">
+      <div class="footer-inner">
+        <div class="footer-legal">
+          <!-- Footer-only pages: reachable from footer, not top nav -->
+          <a href="#terms" data-route-link="terms">Terms &amp; Conditions</a>
+          <a href="#privacy" data-route-link="privacy">Privacy Policy</a>
+          <a href="#account-security" data-route-link="account-security">Account Security</a>
+          <a href="#game-rules" data-route-link="game-rules">Game Rules</a>
+          <a href="#rewards-program" data-route-link="rewards-program">Rewards Program</a>
+          <a href="#eligible-jurisdictions" data-route-link="eligible-jurisdictions">Eligible Jurisdictions</a>
+          <a href="#licensing-regulatory" data-route-link="licensing-regulatory">Licensing &amp; Regulatory</a>
+          <a href="#responsible-gaming" data-route-link="responsible-gaming">Have a Gambling Problem?</a>
+        </div>
+        <div class="footer-credit">
+          Powered by
+          <a href="https://cook-technology.cook-international.com/" target="_blank" rel="noopener">
+            Cook Technology Services
+          </a>.
+          Copyright © 2025. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
   </div>
 
   <script>
     (function () {
-      var root = document.getElementById("cook-vip-lounge");
-      if (!root) return;
+      // ---- Helpers ----
+      function is21Verified() {
+        return localStorage.getItem("cook21Verified") === "true";
+      }
 
-      var loginForm = root.querySelector("#vip-login-form");
-      var loginBtn = root.querySelector("#vip-login-btn");
-      var forgotBtn = root.querySelector("#vip-forgot-pin");
-      var metaEl = root.querySelector("#vip-login-meta");
-      var gameSelect = root.querySelector("#vip-game-select");
-      var tiles = Array.prototype.slice.call(root.querySelectorAll(".vip-tile"));
-
-      function setMeta(message, type) {
-        if (!metaEl) return;
-        metaEl.textContent = message;
-        metaEl.classList.remove("vip-login-error", "vip-login-success");
-        if (type === "error") {
-          metaEl.classList.add("vip-login-error");
-        } else if (type === "success") {
-          metaEl.classList.add("vip-login-success");
+      function set21Verified(dobIso) {
+        localStorage.setItem("cook21Verified", "true");
+        if (dobIso) {
+          localStorage.setItem("cook21Dob", dobIso);
         }
       }
 
-      function goTo(url, source) {
-        if (!url) return;
+      function isLoggedIn() {
+        return localStorage.getItem("cookPlayerLoggedIn") === "true";
+      }
 
-        // Emit existing analytics event, if available
-        try {
-          if (typeof window.cpSendRosterEvent === "function") {
-            window.cpSendRosterEvent("vip_lounge_navigate", {
-              from: "vip-lounge",
-              target: url,
-              source: source || "unknown"
-            });
-          }
-        } catch (e) {}
-
-        // In-app navigation map (Cook iOS PWA)
-        var screenMap = {
-          "/vip-lounge": "screen-vip",
-          "/player-account": "screen-player",
-          "/lucky-wheel": "screen-lucky-wheel",
-          "/rainbow-wheel": "screen-rainbow-wheel",
-          "/race-track": "screen-racetrack",
-
-          "/vip/caribbean-stud-poker": "screen-vip-caribbean-stud",
-          "/vip/pai-gow-poker": "screen-vip-pai-gow",
-          "/vip/three-card-poker": "screen-vip-three-card",
-          "/vip/vip-texas-holdem": "screen-vip-texas-holdem",
-          "/vip/mississippi-stud-poker": "screen-vip-mississippi-stud",
-          "/vip/high-roller-roulette": "screen-vip-high-roller-roulette",
-          "/vip/high-roller-craps": "screen-vip-high-roller-craps",
-          "/vip-baccarat": "screen-vip-baccarat",
-          "/VIPBlackjack": "screen-vip-blackjack",
-          "/vip-blackjack": "screen-vip-blackjack"
-        };
-
-        if (typeof window.cpShowScreen === "function" && screenMap[url]) {
-          window.cpShowScreen(screenMap[url]);
-          return;
+      function calcAge(year, month, day) {
+        const dob = new Date(year, month - 1, day);
+        if (isNaN(dob.getTime())) return 0;
+        const today = new Date();
+        let age = today.getFullYear() - dob.getFullYear();
+        const m = today.getMonth() - dob.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+          age--;
         }
-
-        // Fallback for web usage
-        window.location.href = url;
+        return age;
       }
 
-      // VIP Login: stay on this page and set shared login state
-      if (loginBtn && loginForm) {
-        loginForm.addEventListener("submit", function (e) {
-          e.preventDefault();
+      function defaultRoute() {
+        return isLoggedIn() ? "vip-lounge" : "player-account";
+      }
 
-          var usernameInput = root.querySelector("#vip-login-username");
-          var pinInput = root.querySelector("#vip-login-pin");
+      function getRouteFromHash() {
+        if (!location.hash) return null;
+        const raw = location.hash.replace("#", "").trim();
+        return raw || null;
+      }
 
-          var username = usernameInput ? usernameInput.value.trim() : "";
-          var pin = pinInput ? pinInput.value.trim() : "";
+      function showView(route) {
+        const views = document.querySelectorAll(".app-view");
+        const navLinks = document.querySelectorAll("[data-route-link]");
 
-          if (!username || !pin) {
-            setMeta("Please enter your username and PIN to continue.", "error");
-            return;
-          }
-
-          try {
-            if (window.localStorage) {
-              localStorage.setItem("cp_vip_username", username);
-              localStorage.setItem("cp_vip_auth_state", "authenticated");
-            }
-          } catch (err) {}
-
-          setMeta("VIP access granted. Welcome back to the VIP Lounge.", "success");
-
-          // Navigate to VIP Lounge main view (already here) or any default VIP game
+        views.forEach((view) => {
+          const r = view.getAttribute("data-route");
+          view.classList.toggle("active", r === route);
         });
-      }
 
-      if (forgotBtn) {
-        forgotBtn.addEventListener("click", function (e) {
-          e.preventDefault();
-          setMeta("Please contact casinosupport@cook-international.com for VIP Player PIN assistance.", "error");
-        });
-      }
-
-      if (gameSelect) {
-        gameSelect.addEventListener("change", function () {
-          var url = this.value;
-          if (url) {
-            goTo(url, "dropdown");
-          }
-        });
-      }
-
-      if (tiles && tiles.length) {
-        tiles.forEach(function (tile) {
-          tile.addEventListener("click", function () {
-            var url = tile.getAttribute("data-url");
-            goTo(url, "tile");
-          });
-        });
-      }
-
-      // Optional: mark VIP Lounge view
-      try {
-        if (typeof window.cpSendRosterEvent === "function") {
-          window.cpSendRosterEvent("vip_lounge_view", {
-            path: "/vip-lounge"
-          });
-        }
-      } catch (e) {}
-    })();
-  </script>
-</div>
-        </section>
-
-        <!-- Race Track — Cook Downs Virtual Horse Race -->
-        <section id="screen-racetrack" class="cp-screen" aria-label="Race Track — Cook Downs Virtual Horse Race">
-          <div style="padding: 8px 4px 12px;">
-            <h2 style="font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--cp-gold-soft);">
-              Race Track — Cook Downs Virtual Horse Race
-            </h2>
-            <p style="font-size: 13px; color: rgba(226,232,240,0.96); margin: 0 0 8px;">
-              Embed your full Cook Downs Virtual Race Track experience here. For now this is a placeholder screen so the iOS app keeps all navigation inside the shell.
-            </p>
-          </div>
-        </section>
-
-        <!-- Games Lobby -->
-        <section id="screen-games" class="cp-screen" aria-label="Games Lobby">
-          <div style="padding: 8px 4px 12px;">
-            <h2 style="font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--cp-gold-soft);">
-              Games Lobby
-            </h2>
-            <p style="font-size: 13px; color: rgba(226,232,240,0.96); margin: 0 0 8px;">
-              List all available casino games here and optionally deep-link into specific VIP game pages or standard game rules.
-            </p>
-          </div>
-        </section>
-
-        <!-- Lucky Wheel -->
-        <section id="screen-lucky-wheel" class="cp-screen" aria-label="Lucky Wheel">
-          <div style="padding: 8px 4px 12px;">
-            <h2 style="font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--cp-gold-soft);">
-              Lucky Wheel
-            </h2>
-            <p style="font-size: 13px; color: rgba(226,232,240,0.96); margin: 0 0 8px;">
-              Paste the Lucky Wheel game or promotional block from your master source file here so it renders inside the app.
-            </p>
-          </div>
-        </section>
-
-        <!-- Rainbow Wheel -->
-        <section id="screen-rainbow-wheel" class="cp-screen" aria-label="Rainbow Wheel">
-          <div style="padding: 8px 4px 12px;">
-            <h2 style="font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--cp-gold-soft);">
-              Rainbow Wheel
-            </h2>
-            <p style="font-size: 13px; color: rgba(226,232,240,0.96); margin: 0 0 8px;">
-              Paste the Rainbow Wheel game or promotional block from your master source file here so it renders inside the app.
-            </p>
-          </div>
-        </section>
-
-        <!-- Terms & Conditions -->
-        <section id="screen-terms" class="cp-screen" aria-label="Terms & Conditions">
-          <div style="padding: 8px 4px 12px;">
-            <h2 style="font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--cp-gold-soft);">
-              Terms &amp; Conditions
-            </h2>
-            <p style="font-size: 13px; color: rgba(226,232,240,0.96); margin: 0 0 8px;">
-              Paste the full Terms of Service HTML from your master source file here so players can read it without leaving the app.
-            </p>
-          </div>
-        </section>
-
-        <!-- Privacy Policy -->
-        <section id="screen-privacy" class="cp-screen" aria-label="Privacy Policy">
-          <div style="padding: 8px 4px 12px;">
-            <h2 style="font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--cp-gold-soft);">
-              Privacy Policy
-            </h2>
-            <p style="font-size: 13px; color: rgba(226,232,240,0.96); margin: 0 0 8px;">
-              Paste the full Privacy Policy HTML from your master source file here so players can read it inside the app.
-            </p>
-          </div>
-        </section>
-
-        <!-- Eligibility & Jurisdictions -->
-        <section id="screen-eligibility" class="cp-screen" aria-label="Eligibility & Jurisdictions">
-          <div style="padding: 8px 4px 12px;">
-            <h2 style="font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--cp-gold-soft);">
-              Eligibility &amp; Jurisdictions
-            </h2>
-            <p style="font-size: 13px; color: rgba(226,232,240,0.96); margin: 0 0 8px;">
-              Paste the Eligibility &amp; Restricted Jurisdictions content here.
-            </p>
-          </div>
-        </section>
-
-        <!-- Game Rules -->
-        <section id="screen-game-rules" class="cp-screen" aria-label="Game Rules">
-          <div style="padding: 8px 4px 12px;">
-            <h2 style="font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--cp-gold-soft);">
-              Game Rules
-            </h2>
-            <p style="font-size: 13px; color: rgba(226,232,240,0.96); margin: 0 0 8px;">
-              Paste your consolidated /game-rules content here so players can review game rules inside the app.
-            </p>
-          </div>
-        </section>
-
-        <!-- Licensing & Regulatory Information -->
-        <section id="screen-licensing" class="cp-screen" aria-label="Licensing & Regulatory Information">
-          <div style="padding: 8px 4px 12px;">
-            <h2 style="font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--cp-gold-soft);">
-              Licensing &amp; Regulatory Information
-            </h2>
-            <p style="font-size: 13px; color: rgba(226,232,240,0.96); margin: 0 0 8px;">
-              Paste the /licensing content here, including licence number OGL/2024/558/0973 and Curaçao regulator details.
-            </p>
-          </div>
-        </section>
-
-        <!-- VIP Blackjack -->
-        <section id="screen-vip-blackjack" class="cp-screen" aria-label="VIP Blackjack">
-          <div style="padding: 8px 4px 12px;">
-            <h2 style="font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--cp-gold-soft);">
-              VIP Blackjack
-            </h2>
-            <p style="font-size: 13px; color: rgba(226,232,240,0.96); margin: 0 0 8px;">
-              Paste the VIP Blackjack game panel, rules, or marketing content from your master source file here.
-            </p>
-          </div>
-        </section>
-
-        <!-- VIP Baccarat -->
-        <section id="screen-vip-baccarat" class="cp-screen" aria-label="VIP Baccarat">
-          <div style="padding: 8px 4px 12px;">
-            <h2 style="font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--cp-gold-soft);">
-              VIP Baccarat
-            </h2>
-            <p style="font-size: 13px; color: rgba(226,232,240,0.96); margin: 0 0 8px;">
-              Paste the VIP Baccarat game panel, rules, or marketing content from your master source file here.
-            </p>
-          </div>
-        </section>
-
-        <!-- VIP Caribbean Stud Poker -->
-        <section id="screen-vip-caribbean-stud" class="cp-screen" aria-label="VIP Caribbean Stud Poker">
-          <div style="padding: 8px 4px 12px;">
-            <h2 style="font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--cp-gold-soft);">
-              VIP Caribbean Stud Poker
-            </h2>
-            <p style="font-size: 13px; color: rgba(226,232,240,0.96); margin: 0 0 8px;">
-              Paste the Caribbean Stud Poker VIP game content here.
-            </p>
-          </div>
-        </section>
-
-        <!-- VIP Pai Gow Poker -->
-        <section id="screen-vip-pai-gow" class="cp-screen" aria-label="VIP Pai Gow Poker">
-          <div style="padding: 8px 4px 12px;">
-            <h2 style="font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--cp-gold-soft);">
-              VIP Pai Gow Poker
-            </h2>
-            <p style="font-size: 13px; color: rgba(226,232,240,0.96); margin: 0 0 8px;">
-              Paste the VIP Pai Gow Poker game content here.
-            </p>
-          </div>
-        </section>
-
-        <!-- VIP Three Card Poker -->
-        <section id="screen-vip-three-card" class="cp-screen" aria-label="VIP Three Card Poker">
-          <div style="padding: 8px 4px 12px;">
-            <h2 style="font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--cp-gold-soft);">
-              VIP Three Card Poker
-            </h2>
-            <p style="font-size: 13px; color: rgba(226,232,240,0.96); margin: 0 0 8px;">
-              Paste the VIP Three Card Poker game content here.
-            </p>
-          </div>
-        </section>
-
-        <!-- VIP Texas Hold'em -->
-        <section id="screen-vip-texas-holdem" class="cp-screen" aria-label="VIP Texas Hold'em">
-          <div style="padding: 8px 4px 12px;">
-            <h2 style="font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--cp-gold-soft);">
-              VIP Texas Hold'em
-            </h2>
-            <p style="font-size: 13px; color: rgba(226,232,240,0.96); margin: 0 0 8px;">
-              Paste the VIP Texas Hold'em game content here.
-            </p>
-          </div>
-        </section>
-
-        <!-- VIP Mississippi Stud Poker -->
-        <section id="screen-vip-mississippi-stud" class="cp-screen" aria-label="VIP Mississippi Stud Poker">
-          <div style="padding: 8px 4px 12px;">
-            <h2 style="font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--cp-gold-soft);">
-              VIP Mississippi Stud Poker
-            </h2>
-            <p style="font-size: 13px; color: rgba(226,232,240,0.96); margin: 0 0 8px;">
-              Paste the VIP Mississippi Stud Poker game content here.
-            </p>
-          </div>
-        </section>
-
-        <!-- High Roller Roulette -->
-        <section id="screen-vip-high-roller-roulette" class="cp-screen" aria-label="High Roller Roulette">
-          <div style="padding: 8px 4px 12px;">
-            <h2 style="font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--cp-gold-soft);">
-              High Roller Roulette
-            </h2>
-            <p style="font-size: 13px; color: rgba(226,232,240,0.96); margin: 0 0 8px;">
-              Paste the High Roller Roulette VIP table content here.
-            </p>
-          </div>
-        </section>
-
-        <!-- High Roller Craps -->
-        <section id="screen-vip-high-roller-craps" class="cp-screen" aria-label="High Roller Craps">
-          <div style="padding: 8px 4px 12px;">
-            <h2 style="font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--cp-gold-soft);">
-              High Roller Craps
-            </h2>
-            <p style="font-size: 13px; color: rgba(226,232,240,0.96); margin: 0 0 8px;">
-              Paste the High Roller Craps VIP table content here.
-            </p>
-          </div>
-        </section>
-      </main>
-
-      <footer class="cp-footer">
-        <div class="cp-footer-left">
-          MUST BE 21+ YEARS OF AGE OR OLDER TO PLAY. WHERE LEGALLY PERMITTED ONLY. PLEASE PLAY RESPONSIBLY.
-        </div>
-        <div class="cp-footer-links">
-          <span class="cp-footer-section-label">Core</span>
-          <button class="cp-footer-link cp-footer-link-primary" type="button" data-screen-target="screen-player">
-            Player Account
-          </button>
-          <button class="cp-footer-link cp-footer-link-primary" type="button" data-screen-target="screen-vip">
-            VIP Lounge
-          </button>
-          <button class="cp-footer-link" type="button" data-screen-target="screen-racetrack">
-            Race Track
-          </button>
-          <button class="cp-footer-link" type="button" data-screen-target="screen-games">
-            Games Lobby
-          </button>
-
-          <span class="cp-footer-section-label">VIP Games</span>
-          <button class="cp-footer-link" type="button" data-screen-target="screen-vip-blackjack">
-            VIP Blackjack
-          </button>
-          <button class="cp-footer-link" type="button" data-screen-target="screen-vip-baccarat">
-            VIP Baccarat
-          </button>
-          <button class="cp-footer-link" type="button" data-screen-target="screen-vip-texas-holdem">
-            VIP Texas Hold'em
-          </button>
-          <button class="cp-footer-link" type="button" data-screen-target="screen-vip-caribbean-stud">
-            Caribbean Stud
-          </button>
-          <button class="cp-footer-link" type="button" data-screen-target="screen-vip-pai-gow">
-            Pai Gow Poker
-          </button>
-          <button class="cp-footer-link" type="button" data-screen-target="screen-vip-three-card">
-            Three Card Poker
-          </button>
-          <button class="cp-footer-link" type="button" data-screen-target="screen-vip-mississippi-stud">
-            Mississippi Stud
-          </button>
-          <button class="cp-footer-link" type="button" data-screen-target="screen-vip-high-roller-roulette">
-            High Roller Roulette
-          </button>
-          <button class="cp-footer-link" type="button" data-screen-target="screen-vip-high-roller-craps">
-            High Roller Craps
-          </button>
-
-          <span class="cp-footer-section-label">Promotions</span>
-          <button class="cp-footer-link" type="button" data-screen-target="screen-lucky-wheel">
-            Lucky Wheel
-          </button>
-          <button class="cp-footer-link" type="button" data-screen-target="screen-rainbow-wheel">
-            Rainbow Wheel
-          </button>
-
-          <span class="cp-footer-section-label">Legal</span>
-          <button class="cp-footer-link" type="button" data-screen-target="screen-terms">
-            Terms
-          </button>
-          <button class="cp-footer-link" type="button" data-screen-target="screen-privacy">
-            Privacy
-          </button>
-          <button class="cp-footer-link" type="button" data-screen-target="screen-eligibility">
-            Eligibility
-          </button>
-          <button class="cp-footer-link" type="button" data-screen-target="screen-game-rules">
-            Game Rules
-          </button>
-          <button class="cp-footer-link" type="button" data-screen-target="screen-licensing">
-            Licensing
-          </button>
-        </div>
-      </footer>
-    </div>
-  </div>
-
-  <script>
-    (function () {
-      var AGE_KEY = "cp_ios_age_verified";
-
-      function showShell() {
-        var gate = document.getElementById("cp-age-gate");
-        var shell = document.getElementById("cp-shell");
-        if (gate) gate.classList.add("is-hidden");
-        if (shell) shell.classList.remove("is-hidden");
-      }
-
-      function initAgeGate() {
-        var confirmBtn = document.getElementById("cp-age-confirm");
-        if (!confirmBtn) return;
-
-        if (window.localStorage && localStorage.getItem(AGE_KEY) === "yes") {
-          showShell();
-          return;
-        }
-
-        confirmBtn.addEventListener("click", function () {
-          try {
-            if (window.localStorage) {
-              localStorage.setItem(AGE_KEY, "yes");
-            }
-          } catch (e) {}
-          showShell();
-        });
-      }
-
-      function setCurrentLabelFromScreen(screenId) {
-        var labelEl = document.getElementById("cp-current-screen-label");
-        if (!labelEl) return;
-        var trigger = document.querySelector('[data-screen-trigger="' + screenId + '"]');
-        if (trigger && trigger.dataset.label) {
-          labelEl.textContent = trigger.dataset.label;
-        }
-      }
-
-      function showScreen(screenId) {
-        var screens = document.querySelectorAll(".cp-screen");
-        screens.forEach(function (screen) {
-          if (screen.id === screenId) {
-            screen.classList.add("is-active");
+        navLinks.forEach((link) => {
+          const r = link.getAttribute("data-route-link");
+          if (!r) return;
+          if (link.closest(".app-nav")) {
+            link.classList.toggle("active", r === route);
           } else {
-            screen.classList.remove("is-active");
+            // footer links don't get "active" style
+            link.classList.remove("active");
           }
         });
-        setCurrentLabelFromScreen(screenId);
       }
 
-      window.cpShowScreen = showScreen;
+      function navigateTo(route) {
+        if (!is21Verified()) {
+          // If user hasn’t passed age gate, show gate and ignore route
+          applyAgeGateState();
+          return;
+        }
+        if (!route) route = defaultRoute();
+        showView(route);
+        if (location.hash.replace("#", "") !== route) {
+          history.replaceState({ route: route }, "", "#" + route);
+        }
+      }
 
-      function initNav() {
-        var navToggle = document.getElementById("cp-nav-toggle");
-        var navMenu = document.getElementById("cp-nav-menu");
+      function applyAgeGateState() {
+        const overlay = document.getElementById("age-gate-overlay");
+        const header = document.getElementById("app-header");
+        const main = document.getElementById("app-main");
+        const footer = document.getElementById("app-footer");
 
-        if (navToggle && navMenu) {
-          navToggle.addEventListener("click", function () {
-            navMenu.classList.toggle("is-open");
+        if (is21Verified()) {
+          overlay.classList.add("hidden");
+          header.style.display = "";
+          main.style.display = "";
+          footer.style.display = "";
+          navigateTo(getRouteFromHash() || defaultRoute());
+        } else {
+          overlay.classList.remove("hidden");
+          header.style.display = "none";
+          main.style.display = "none";
+          footer.style.display = "none";
+        }
+      }
+
+      // ---- Init on DOM ready ----
+      document.addEventListener("DOMContentLoaded", function () {
+        // Register SW
+        if ("serviceWorker" in navigator) {
+          window.addEventListener("load", function () {
+            navigator.serviceWorker
+              .register("/service-worker.js")
+              .catch(function (err) {
+                console.warn("Service worker registration failed:", err);
+              });
           });
+        }
 
-          document.addEventListener("click", function (e) {
-            if (!navMenu.contains(e.target) && e.target !== navToggle && !navToggle.contains(e.target)) {
-              navMenu.classList.remove("is-open");
+        // Wire up nav + footer links
+        const routeLinks = document.querySelectorAll("[data-route-link]");
+        routeLinks.forEach(function (link) {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            const route = link.getAttribute("data-route-link");
+            navigateTo(route);
+          });
+        });
+
+        // Age gate form
+        const ageForm = document.getElementById("age-gate-form");
+        const monthEl = document.getElementById("dob-month");
+        const dayEl = document.getElementById("dob-day");
+        const yearEl = document.getElementById("dob-year");
+        const certEl = document.getElementById("dob-cert-checkbox");
+        const errorEl = document.getElementById("age-gate-error");
+
+        if (ageForm) {
+          ageForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            errorEl.textContent = "";
+
+            const month = parseInt(monthEl.value, 10);
+            const day = parseInt(dayEl.value, 10);
+            const year = parseInt(yearEl.value, 10);
+
+            if (!month || !day || !year) {
+              errorEl.textContent = "Please enter your full date of birth.";
+              return;
             }
+
+            if (!certEl.checked) {
+              errorEl.textContent = "You must certify that you meet the eligibility requirements.";
+              return;
+            }
+
+            const age = calcAge(year, month, day);
+            if (age < 21) {
+              errorEl.textContent = "Access denied. You must be at least 21 years of age.";
+              return;
+            }
+
+            const dobIso = new Date(year, month - 1, day).toISOString().slice(0, 10);
+            set21Verified(dobIso);
+            applyAgeGateState();
           });
         }
 
-        document.addEventListener("click", function (e) {
-          var target = e.target.closest("[data-screen-target]");
-          if (!target) return;
-          e.preventDefault();
-          var id = target.getAttribute("data-screen-target");
-          if (!id) return;
-          showScreen(id);
-
-          if (navMenu) {
-            navMenu.classList.remove("is-open");
-          }
-        });
-      }
-
-      function initChipsPill() {
-        var pill = document.getElementById("cp-chips-pill");
-        if (!pill) return;
-
-        function formatAmount(value) {
-          if (value == null || isNaN(value)) return null;
-          try {
-            return new Intl.NumberFormat("en-US").format(Number(value));
-          } catch (e) {
-            return String(value);
-          }
-        }
-
-        function update(balance) {
-          var formatted = formatAmount(balance);
-          var label = formatted ? "Chips: " + formatted : "Chips: \u2014";
-          pill.innerHTML = "<span>" + label + "</span>";
-        }
-
-        var startingBalance = null;
-        try {
-          if (window.CaligulasWallet && typeof window.CaligulasWallet.getBalance === "function") {
-            startingBalance = window.CaligulasWallet.getBalance();
-          } else if (window.localStorage && localStorage.getItem("cp_global_wallet_balance") != null) {
-            startingBalance = parseFloat(localStorage.getItem("cp_global_wallet_balance"));
-          }
-        } catch (e) {}
-
-        update(startingBalance);
-
-        window.addEventListener("CaligulasWalletUpdated", function (e) {
-          if (e && e.detail && typeof e.detail.balance !== "undefined") {
-            update(e.detail.balance);
+        // Hash-based routing
+        window.addEventListener("hashchange", function () {
+          if (!is21Verified()) {
+            applyAgeGateState();
             return;
           }
-          try {
-            if (window.CaligulasWallet && typeof window.CaligulasWallet.getBalance === "function") {
-              update(window.CaligulasWallet.getBalance());
-            }
-          } catch (err) {}
+          const route = getRouteFromHash() || defaultRoute();
+          navigateTo(route);
         });
-      }
 
-      document.addEventListener("DOMContentLoaded", function () {
-        initAgeGate();
-        initNav();
-        initChipsPill();
-        showScreen("screen-player");
+        // Initial state
+        applyAgeGateState();
       });
     })();
-  </script>
-
-  <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("sw.js").catch(function (err) {
-          console.warn("Service worker registration failed", err);
-        });
-      });
-    }
   </script>
 </body>
 </html>
